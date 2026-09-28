@@ -13,12 +13,11 @@ versions before 1.0. Read [the changelog](CHANGELOG.md) before updating.
 In an existing Composer project:
 
 ```sh
-composer config repositories.stage vcs https://github.com/skyyware/stage.git
 composer require skyyware/stage:^0.1
 ```
 
-These commands install the tagged public package directly from GitHub.
-No GitHub account is required. Commit your application's `composer.lock`.
+Composer installs the tagged package from [Packagist](https://packagist.org/packages/skyyware/stage).
+No GitHub account or custom repository setting is required. Commit your application's `composer.lock`.
 
 ## Run a small application
 
