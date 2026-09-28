@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.1 — 2026-09-28
+
+- Index parameter routes by path depth and their fixed prefix. Dispatch skips
+  unrelated paths while preserving literal priority, registration order,
+  method handling, and parameter validation.
+- Add a repeatable routing benchmark and tests for overlapping prefixes,
+  encoded paths, empty segments, and trailing slashes.
+
+No public API or dependency changes.
+
 ## 0.1.0 — 2026-09-28
 
 First public MIT release.

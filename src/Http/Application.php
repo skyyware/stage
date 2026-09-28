@@ -11,6 +11,9 @@ final readonly class Application
     /** @var array<string, array<string, Route>> */
     private array $routes;
 
+    /** @var array<int, array<string, array<int, array<string, Route>>>> */
+    private array $patterns;
+
     public function __construct(Route ...$routes)
     {
         $index = [];
@@ -20,14 +23,35 @@ final readonly class Application
             }
             $index[$route->key][$route->method] = $route;
         }
-        $this->routes = $index;
+        $literal = [];
+        $patterns = [];
+        $position = 0;
+        foreach ($index as $path => $methods) {
+            $prefix = strstr($path, '{}', true);
+            if ($prefix === false) {
+                $literal[$path] = $methods;
+            } else {
+                $patterns[substr_count($path, '/')][$prefix][$position] = $methods;
+            }
+            $position++;
+        }
+        $this->routes = $literal;
+        $this->patterns = $patterns;
     }
 
     public function handle(Request $request): Response
     {
         $routes = $this->routes[$request->path] ?? [];
         if ($routes === []) {
-            foreach ($this->routes as $candidates) {
+            $patterns = $this->patterns[substr_count($request->path, '/')] ?? [];
+            $candidatesByPosition = [];
+            $prefix = '';
+            foreach (explode('/', $request->path) as $segment) {
+                $candidatesByPosition += $patterns[$prefix] ?? [];
+                $prefix .= $segment . '/';
+            }
+            ksort($candidatesByPosition);
+            foreach ($candidatesByPosition as $candidates) {
                 $candidate = reset($candidates);
                 if ($candidate->parameters($request->path) !== null) {
                     $routes = $candidates;

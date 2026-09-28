@@ -1,0 +1,42 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+use Stage\Http\Application;
+use Stage\Http\Request;
+use Stage\Http\Response;
+use Stage\Http\Route;
+
+require dirname(__DIR__) . '/vendor/autoload.php';
+
+$results = [];
+foreach ([10, 100, 1000] as $count) {
+    $routes = [];
+    for ($index = 0; $index < $count; $index++) {
+        $routes[] = Route::get('/resource-' . $index . '/{id}', fn (Request $request) => Response::text($request->parameters['id']));
+    }
+    $routes[] = Route::get('/health', fn () => Response::text('ok'));
+    $started = hrtime(true);
+    $app = new Application(...$routes);
+    $construction = (hrtime(true) - $started) / 1000;
+    foreach (['literal' => '/health', 'parameter' => '/resource-' . ($count - 1) . '/42', 'missing' => '/absent/42'] as $kind => $path) {
+        $request = new Request('GET', $path);
+        $expected = $kind === 'missing' ? 404 : 200;
+        for ($warmup = 0; $warmup < 100; $warmup++) {
+            $app->handle($request);
+        }
+        $samples = [];
+        for ($sample = 0; $sample < 5; $sample++) {
+            $started = hrtime(true);
+            for ($iteration = 0; $iteration < 1000; $iteration++) {
+                if ($app->handle($request)->status !== $expected) {
+                    throw new RuntimeException('Unexpected benchmark response.');
+                }
+            }
+            $samples[] = (hrtime(true) - $started) / 1000000;
+        }
+        sort($samples);
+        $results[] = ['routes' => $count + 1, 'request' => $kind, 'median_us' => round($samples[2], 3), 'construction_us' => round($construction, 3)];
+    }
+}
+echo json_encode(['php' => PHP_VERSION, 'os' => PHP_OS_FAMILY, 'iterations_per_sample' => 1000, 'samples' => 5, 'results' => $results], JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR), PHP_EOL;

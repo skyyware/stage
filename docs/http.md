@@ -1,6 +1,6 @@
 # HTTP reference
 
-`Application` accepts `Route` objects. Each route has an uppercase method, an
+`Application` accepts `Route` objects. Each route has an uppercase method, a
 literal encoded path or a named path pattern, and a callable accepting `Request`
 and returning `Response`. `Route::get` constructs a GET route. Duplicate methods
 for the same path shape fail at startup, including `/{id}` and `/{slug}`.
@@ -15,6 +15,16 @@ Literal paths take priority regardless of registration order. Other overlapping
 patterns use registration order. The matched path determines allowed methods;
 a method mismatch does not fall through to a less specific route. Parameter
 values remain untrusted input. Validate their domain meaning in the application.
+
+Literal routes use a direct lookup. Parameter routes are indexed at construction
+by their segment count and fixed prefix. Dispatch checks only those candidates,
+in registration order. Patterns sharing the same prefix and depth still require
+a linear scan. Construct the application once when using a persistent runtime.
+
+Run `php bin/benchmark` in the source checkout to measure dispatch with 10,
+100, and 1,000 parameter routes. It reports microseconds per request after
+warmup, using the median of five samples. The fixture uses distinct prefixes;
+it measures routing in memory, not server throughput or application capacity.
 
 `handle(Request): Response` runs in memory and does not send headers or output.
 It returns 404 for an unknown path and 405 with `Allow` for an unsupported

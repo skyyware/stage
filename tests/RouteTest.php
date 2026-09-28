@@ -67,4 +67,29 @@ final class RouteTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
         Route::get('/page-{id}', fn () => Response::text('one'));
     }
+
+    public function testOverlappingPrefixesKeepRegistrationOrderAndMethodBoundaries(): void
+    {
+        $general = Route::get('/{area}/pages/{id}', fn (Request $r) => Response::json($r->parameters));
+        $specific = new Route('POST', '/admin/pages/{page}', fn () => Response::text('specific'));
+        $request = new Request('GET', '/admin/pages/42');
+        self::assertSame('{"area":"admin","id":"42"}', (new Application($general, $specific))->handle($request)->body);
+        self::assertSame(405, (new Application($specific, $general))->handle($request)->status);
+        self::assertSame('specific', (new Application($specific, $general))->handle(new Request('POST', '/admin/pages/42'))->body);
+    }
+
+    public function testPrefixIndexPreservesEncodedPathsEmptySegmentsAndDepth(): void
+    {
+        $app = new Application(
+            Route::get('/space%20here/{id}', fn (Request $r) => Response::text($r->parameters['id'])),
+            Route::get('/area//{id}/', fn (Request $r) => Response::text($r->parameters['id'])),
+            Route::get('/area/{id}', fn (Request $r) => Response::text($r->parameters['id'])),
+        );
+        self::assertSame('42', $app->handle(new Request('GET', '/space%20here/42'))->body);
+        self::assertSame('42', $app->handle(new Request('GET', '/area//42/'))->body);
+        self::assertSame('42', $app->handle(new Request('GET', '/area/42'))->body);
+        foreach (['/space%20here/42/extra', '/area//42', '/area/42/', '/area///'] as $path) {
+            self::assertSame(404, $app->handle(new Request('GET', $path))->status, $path);
+        }
+    }
 }
