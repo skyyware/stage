@@ -1,0 +1,5 @@
+imports:
+  - deptrac.yaml
+deptrac:
+  paths:
+    - ./tests/fixtures

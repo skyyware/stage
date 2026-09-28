@@ -1,0 +1,31 @@
+deptrac:
+  paths:
+    - ./src
+    - ./examples/Features
+  layers:
+    - name: Http
+      collectors:
+        - type: classLike
+          value: '^Stage\\Http\\'
+    - name: Security
+      collectors:
+        - type: classLike
+          value: '^Stage\\Security\\'
+    - name: CounterContract
+      collectors:
+        - type: classLike
+          value: '^Example\\Counter\\Contract\\'
+    - name: Counter
+      collectors:
+        - type: classLike
+          value: '^Example\\Counter\\(?!Contract\\)'
+    - name: Reports
+      collectors:
+        - type: classLike
+          value: '^Example\\Reports\\'
+  ruleset:
+    Http: []
+    Security: []
+    CounterContract: [Security]
+    Counter: [Security, CounterContract]
+    Reports: [Security, CounterContract]

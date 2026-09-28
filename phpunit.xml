@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php" cacheDirectory=".runtime/phpunit" failOnWarning="true" failOnRisky="true">
+    <testsuites><testsuite name="Stage"><directory>tests</directory></testsuite></testsuites>
+</phpunit>

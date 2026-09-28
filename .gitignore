@@ -1,0 +1,7 @@
+/vendor/
+/.runtime/
+/.deptrac.cache
+/.phpunit.cache/
+/.DS_Store
+/auth.json
+/.env*
