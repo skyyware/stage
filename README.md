@@ -1,19 +1,31 @@
 # Stage
 
-Stage is a PHP framework for applications with explicit boundaries.
+Stage is a PHP framework for people and coding agents.
 Start with a request and a response. Keep your application rules in typed PHP
 objects, then compose more features as the application grows.
 
-Requires PHP 8.4 or later within PHP 8. This is an early foundation with an
-unstable API. The source is currently private, licensed under MIT, and intended
-for a future public release.
+Requires PHP 8.4 or later within PHP 8. Stage is open source under MIT.
+Version 0.1 is the first public release. The API can change between minor
+versions before 1.0. Read [the changelog](CHANGELOG.md) before updating.
+
+## Install with Composer
+
+In an existing Composer project:
+
+```sh
+composer config repositories.stage vcs https://github.com/skyyware/stage.git
+composer require skyyware/stage:^0.1
+```
+
+These commands install the tagged public package directly from GitHub.
+No GitHub account is required. Commit your application's `composer.lock`.
 
 ## Run a small application
 
-With access to this repository, clone it and install its development tools:
+To run the included example and development checks:
 
 ```sh
-git clone git@github.com:skyyware/stage.git
+git clone https://github.com/skyyware/stage.git
 cd stage
 composer install
 php -S 127.0.0.1:8080 examples/hello.php
@@ -51,18 +63,19 @@ to check declared dependency rules. The checks include an intentionally forbidde
 import to prove the architecture rule can fail.
 
 Read [the HTTP reference](docs/http.md), [feature composition](docs/features.md),
-and [the design](docs/design.md). The [website](https://stage.dev) is the first
+[working with agents](docs/agents.md), and [the principles](docs/principles.md).
+The [website](https://stage.dev) is the first
 application and lives in a separate repository.
 
 ## Current scope
 
-The initial core provides exact-path HTTP routing, immutable messages, bounded
+The initial core provides literal and named-parameter HTTP routes, immutable messages, bounded
 request bodies, JSON responses, and an optional caller permission value.
 Authentication, persistence, queues, templates, and agent integrations belong
 to application code until an independently tested package earns a place here.
 
-This release demonstrates a working foundation, not large-scale performance
-or production readiness for every kind of application.
+The router buffers bodies. Worker lifecycle and performance under load have
+not been validated. See [the design](docs/design.md) for the current boundaries.
 
 ## License
 

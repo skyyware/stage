@@ -15,10 +15,10 @@ final readonly class Application
     {
         $index = [];
         foreach ($routes as $route) {
-            if (isset($index[$route->path][$route->method])) {
+            if (isset($index[$route->key][$route->method])) {
                 throw new InvalidArgumentException('Duplicate route: ' . $route->method . ' ' . $route->path);
             }
-            $index[$route->path][$route->method] = $route;
+            $index[$route->key][$route->method] = $route;
         }
         $this->routes = $index;
     }
@@ -27,12 +27,21 @@ final readonly class Application
     {
         $routes = $this->routes[$request->path] ?? [];
         if ($routes === []) {
+            foreach ($this->routes as $candidates) {
+                $candidate = reset($candidates);
+                if ($candidate->parameters($request->path) !== null) {
+                    $routes = $candidates;
+                    break;
+                }
+            }
+        }
+        if ($routes === []) {
             return Response::text('Not found', 404);
         }
         $route = $routes[$request->method] ?? ($request->method === 'HEAD' ? ($routes['GET'] ?? null) : null);
         if ($route !== null) {
             try {
-                return ($route->handler)($request);
+                return ($route->handler)($request->withParameters($route->parameters($request->path) ?? []));
             } catch (HttpError $error) {
                 return Response::json(['error' => $error->status], $error->status);
             }

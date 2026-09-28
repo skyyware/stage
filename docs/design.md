@@ -4,7 +4,7 @@ A program receives input, applies a rule, and produces a result. A transport
 such as HTTP converts external data into that input. Keeping those jobs separate
 lets the same operation serve a web page, command, or agent tool.
 
-Stage starts with PHP 8.4, immutable HTTP messages, an exact-path router, and an
+Stage starts with PHP 8.4, immutable HTTP messages, a path router, and an
 optional caller permission value. There are no production package dependencies.
 PHPUnit, PHPStan, and Deptrac run during development only.
 
@@ -42,8 +42,9 @@ optimizing it. Define the failure case before adding retries or concurrency.
 Automate repeatable checks after the behavior is understood.
 
 The initial HTTP implementation buffers request and response bodies. Its default
-request body limit is 1 MiB. It has exact paths only, no streaming or wildcard
-routes, and one string per response header. It does not implement PSR-7 or
+request body limit is 1 MiB. Literal paths and named path segments are supported.
+There is no streaming or catch-all wildcard, and one string per response header.
+It does not implement PSR-7 or
 PSR-15. Large uploads, cookie handling, queues, worker lifecycle, and distributed
 transactions need separate designs and tests before they are advertised.
 

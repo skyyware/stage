@@ -1,0 +1,22 @@
+name: Bug report
+description: Report a reproducible problem in Stage
+body:
+  - type: input
+    id: versions
+    attributes:
+      label: Stage and PHP versions
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Smallest reproduction
+      description: Include code and the command needed to reproduce the problem. Remove credentials and private data.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+    validations:
+      required: true

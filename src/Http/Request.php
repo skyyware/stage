@@ -8,13 +8,17 @@ use JsonException;
 
 final readonly class Request
 {
-    /** @param array<string, string> $headers */
+    /**
+     * @param array<string, string> $headers
+     * @param array<string, string> $parameters
+     */
     public function __construct(
         public string $method,
         public string $path,
         public string $body = '',
         public array $headers = [],
         public string $query = '',
+        public array $parameters = [],
     ) {
         if (!preg_match('/^[A-Z]+$/D', $method)) {
             throw new InvalidArgumentException('The HTTP method must contain uppercase letters.');
@@ -22,6 +26,12 @@ final readonly class Request
         if (!str_starts_with($path, '/') || preg_match('/[\x00-\x20\x7f?#]|%(?![0-9a-f]{2})/i', $path)) {
             throw new InvalidArgumentException('The request path must be an encoded absolute path.');
         }
+    }
+
+    /** @param array<string, string> $parameters */
+    public function withParameters(array $parameters): self
+    {
+        return new self($this->method, $this->path, $this->body, $this->headers, $this->query, $parameters);
     }
 
     public static function fromGlobals(int $maxBodyBytes = 1048576): self

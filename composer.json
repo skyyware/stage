@@ -1,6 +1,13 @@
 {
   "name": "skyyware/stage",
-  "description": "A small PHP framework with explicit application boundaries.",
+  "description": "A PHP framework for people and coding agents, with explicit application boundaries.",
+  "keywords": ["php", "framework", "http", "agents"],
+  "homepage": "https://stage.dev",
+  "support": {
+    "issues": "https://github.com/skyyware/stage/issues",
+    "source": "https://github.com/skyyware/stage",
+    "docs": "https://stage.dev/docs"
+  },
   "type": "library",
   "license": "MIT",
   "require": {"php": "^8.4", "ext-json": "*"},
