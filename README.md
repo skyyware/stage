@@ -5,7 +5,7 @@ Start with a request and a response. Keep your application rules in typed PHP
 objects, then compose more features as the application grows.
 
 Requires PHP 8.4 or later within PHP 8. Stage is open source under MIT.
-Version 0.1 is the first public release. The API can change between minor
+Version 0.1 is an early release. The API can change between minor
 versions before 1.0. Read [the changelog](CHANGELOG.md) before updating.
 
 ## Install with Composer
@@ -63,8 +63,17 @@ import to prove the architecture rule can fail.
 
 Read [the HTTP reference](docs/http.md), [feature composition](docs/features.md),
 [working with agents](docs/agents.md), and [the principles](docs/principles.md).
-The [website](https://stage.dev) is the first
-application and lives in a separate repository.
+Read [the design](docs/design.md) for the core's responsibilities.
+
+## Choose a package
+
+Install only the packages your application needs:
+
+- [Stage CMS](https://github.com/skyyware/stage-cms) adds editing, revisions, publication, and scoped agent access.
+- [Stage Chat](https://github.com/skyyware/stage-chat) defines a stateless chat contract without a provider dependency.
+- [Stage Chat Codex](https://github.com/skyyware/stage-chat-codex) implements that contract with an isolated Codex CLI process.
+
+Each package has its own installation guide, version, and MIT license.
 
 ## Current scope
 
@@ -79,3 +88,4 @@ not been validated. See [the design](docs/design.md) for the current boundaries.
 ## License
 
 [MIT](LICENSE). See [contributing](CONTRIBUTING.md) before changing the API.
+Maintainers follow [the package release guide](docs/releases.md).

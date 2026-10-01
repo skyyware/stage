@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.2 — 2026-10-01
+
+Public package documentation links to the source and companion packages.
+The maintainer release guide requires a GitHub Release, Packagist availability,
+and an installation without private repository configuration or credentials.
+Contribution instructions keep validation local; repository automation stays disabled.
+
+No public API, routing behavior, or production dependency changes.
+
 ## 0.1.1 — 2026-09-28
 
 - Index parameter routes by path depth and their fixed prefix. Dispatch skips

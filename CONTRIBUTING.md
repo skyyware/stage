@@ -26,5 +26,8 @@ People and agents can contribute. The contributor remains responsible for
 understanding the change, testing it, and respecting the license of its sources.
 Keep discussion specific and considerate. Review the work on its merits.
 
+Run checks locally; repository automation is disabled. Maintainers use
+[the release guide](docs/releases.md) when publishing a version.
+
 Report security problems through [private vulnerability reporting](https://github.com/skyyware/stage/security/advisories/new).
 Do not put credentials, private data, or unpatched exploit details in an issue.
