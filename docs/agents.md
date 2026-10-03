@@ -11,8 +11,11 @@ Locate the operation that owns the rule before changing HTTP or presentation.
 5. Run the application's check command and inspect the actual result.
 6. Report the changed behavior, checks, and remaining limits.
 
-The [feature example](features.md) shows a direct PHP call with permissions.
-The [HTTP reference](http.md) shows how external requests reach those calls.
+The [first HTTP application](getting-started.md) provides a runnable entry point
+and response checks. [Compose features](features.md) builds operations with
+permissions in the application's own namespace. Use [the HTTP reference](http.md)
+to look up transport behavior. The framework's development tools and
+`composer check` script are not inherited by applications through Composer.
 Stage does not require a model vendor, subscription, or autonomous runtime.
 
 When exposing an operation to a remote agent, authenticate its credential on

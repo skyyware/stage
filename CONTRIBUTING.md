@@ -1,7 +1,31 @@
 # Contribute to Stage
 
-Install PHP 8.4 and Composer. Run `composer install`, then `composer check`.
-The check validates package metadata, types, behavior, and architecture rules.
+To build an application with Stage, start with
+[the Composer installation guide](README.md#create-an-application).
+
+To change the framework itself, install PHP 8.4 or later within PHP 8 and
+Composer. Clone your fork, or use the upstream checkout for local inspection:
+
+```sh
+git clone https://github.com/skyyware/stage.git
+cd stage
+composer install
+composer check
+```
+
+`composer check` validates package metadata, types, behavior, and architecture
+rules in this checkout. It runs PHPStan, PHPUnit, and Deptrac. The architecture
+check includes an intentionally forbidden import to prove the rule can fail.
+These tools and scripts are not installed into applications that require Stage.
+
+To run the framework's HTTP example:
+
+```sh
+php -S 127.0.0.1:8080 -t examples examples/hello.php
+```
+
+Open [http://127.0.0.1:8080](http://127.0.0.1:8080) and expect
+`{"hello":"world"}`. Press Ctrl+C to stop the server.
 
 Start a change with a concrete caller and a failing behavior. Prefer deleting
 unnecessary work to adding another abstraction. Keep state and authorization

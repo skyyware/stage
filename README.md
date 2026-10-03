@@ -1,16 +1,27 @@
 # Stage
 
 Stage is a PHP framework for people and coding agents.
-Start with a request and a response. Keep your application rules in typed PHP
-objects, then compose more features as the application grows.
+It provides HTTP routing, request and response values, and caller permission
+checks. Keep your application rules in typed PHP objects, then compose more
+features as the application grows.
 
 Requires PHP 8.4 or later within PHP 8. Stage is open source under MIT.
 Version 0.1 is an early release. The API can change between minor
 versions before 1.0. Read [the changelog](CHANGELOG.md) before updating.
 
-## Install with Composer
+## Create an application
 
-In an existing Composer project:
+Install [PHP](https://www.php.net/downloads.php) 8.4 or later within PHP 8 and
+[Composer](https://getcomposer.org/download/). In a new application directory:
+
+```sh
+mkdir stage-app
+cd stage-app
+composer require skyyware/stage:^0.1
+mkdir public
+```
+
+For an existing Composer project, install the same package:
 
 ```sh
 composer require skyyware/stage:^0.1
@@ -19,19 +30,7 @@ composer require skyyware/stage:^0.1
 Composer installs the tagged package from [Packagist](https://packagist.org/packages/skyyware/stage).
 No GitHub account or custom repository setting is required. Commit your application's `composer.lock`.
 
-## Run a small application
-
-To run the included example and development checks:
-
-```sh
-git clone https://github.com/skyyware/stage.git
-cd stage
-composer install
-php -S 127.0.0.1:8080 examples/hello.php
-```
-
-Open `http://127.0.0.1:8080`. The response is `{"hello":"world"}`.
-The application is:
+Create `public/index.php` in your application:
 
 ```php
 <?php
@@ -48,22 +47,45 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 ))->run();
 ```
 
+Start PHP's local development server from the application directory:
+
+```sh
+php -S 127.0.0.1:8080 -t public public/index.php
+```
+
+Open [http://127.0.0.1:8080](http://127.0.0.1:8080). The response is
+`{"hello":"world"}`. Press Ctrl+C to stop the server.
+
+Keep `vendor/` outside `public/`. Use only `public/` as the web root when you
+configure a production server. PHP's built-in server is for local development.
+
+Continue with [routes and JSON input](docs/getting-started.md) to add an endpoint
+and check successful, malformed, and rejected requests.
+
 ## Build with clear boundaries
 
 - Pass dependencies through constructors. No global container is required.
 - Parse external input into types before calling an operation.
 - Check permissions inside the operation, including calls outside HTTP.
 - Expose a feature contract when another feature needs it.
-- Run `composer check` to validate types, behavior, and dependency rules.
+- Test successful, denied, and malformed calls in your application.
 
-There are no production Composer dependencies. Development uses PHPUnit,
-PHPStan at its strictest level, and [Deptrac](https://deptrac.github.io/deptrac/)
-to check declared dependency rules. The checks include an intentionally forbidden
-import to prove the architecture rule can fail.
+Stage requires no other production Composer packages. Choose your application's
+testing and analysis tools. Installing Stage does not install its development
+tools or add a `composer check` command to your application.
 
-Read [the HTTP reference](docs/http.md), [feature composition](docs/features.md),
-[working with agents](docs/agents.md), and [the principles](docs/principles.md).
-Read [the design](docs/design.md) for the core's responsibilities.
+## Documentation
+
+Start with the guide that matches your next task:
+
+| Task | Guide |
+| --- | --- |
+| Add routes, accept JSON, and check responses | [Build your first HTTP application](docs/getting-started.md) |
+| Keep rules and permissions in reusable PHP objects | [Compose features](docs/features.md) |
+| Look up HTTP methods, errors, and limits | [HTTP reference](docs/http.md) |
+| Give a coding agent a bounded application task | [Work with agents](docs/agents.md) |
+| Understand the core's responsibilities and tradeoffs | [Design](docs/design.md) and [principles](docs/principles.md) |
+| Change the framework or publish a package version | [Contributing](CONTRIBUTING.md) and [releases](docs/releases.md) |
 
 ## Choose a package
 
@@ -87,5 +109,6 @@ not been validated. See [the design](docs/design.md) for the current boundaries.
 
 ## License
 
-[MIT](LICENSE). See [contributing](CONTRIBUTING.md) before changing the API.
-Maintainers follow [the package release guide](docs/releases.md).
+[MIT](LICENSE). To work on the framework itself, follow
+[contributing](CONTRIBUTING.md). Maintainers follow
+[the package release guide](docs/releases.md).
