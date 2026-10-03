@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.3 — 2026-10-03
+
+- Add `UploadedFile::fromPhp` for one native PHP upload, with checked metadata,
+  actual byte limits, and explicit 400, 413, and 500 errors.
+- Add `FileResponse` for bounded-memory attachment downloads with UTF-8 names,
+  application headers, computed length, and HEAD support.
+- Make `Response` extensible for file delivery while preserving buffered
+  responses and existing route return types. No consumer migration is required.
+- Add real multipart and download tests with files larger than PHP's memory
+  limit, plus a runnable file guide and Composer-first application documentation.
+
+No new production dependencies. Configure PHP and server upload limits
+separately from Stage's raw body limit. The application still owns file access,
+storage, content policy, and retention. Arbitrary streams and Range are not supported.
+
 ## 0.1.2 — 2026-10-01
 
 Public package documentation links to the source and companion packages.

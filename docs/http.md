@@ -39,13 +39,16 @@ values remain untrusted input and need application validation.
 
 An unknown path returns 404. An unsupported method returns 405 with `Allow`.
 OPTIONS returns 204 with `Allow` for a known path. HEAD uses a registered HEAD
-route or falls back to GET. A response from `handle` retains its body in memory;
-`run` suppresses body output for HEAD.
+route or falls back to GET. `handle` returns the response without sending it;
+`run` suppresses body output for HEAD. Ordinary responses retain a string body.
+A `FileResponse` holds an opened file and sends its contents only from `send`.
 
 `handle` translates a handler's `HttpError` into JSON such as `{"error":422}`
 with the same HTTP status. `run` also translates errors from reading the request.
 An unexpected exception propagates from `handle`. `run` catches the exception,
 returns a generic 500, and logs its class without its message or request data.
+This translation covers request parsing and dispatch. A failure while sending
+a file can interrupt an already-started response; it cannot become a JSON error.
 
 `Stage\Security\Forbidden` is not an `HttpError`. It needs translation to 403
 in the application's HTTP handler. [Compose features](features.md) describes
@@ -72,6 +75,11 @@ Dispatch replaces any pre-existing parameter map with the matched route's values
 Headers read from PHP have lowercase names. The raw query is kept separately
 from the path. Proxy headers never set identity or trust.
 
+The raw body limit does not limit PHP-parsed POST multipart uploads. With PHP's
+normal `enable_post_data_reading` setting, uploaded files and form fields are
+available through `$_FILES` and `$_POST`; `php://input` is unavailable for these
+requests. Configure PHP and server limits separately. See [transfer files](files.md).
+
 `json()` throws `HttpError(400)` for malformed JSON. A valid JSON value can be
 an array, scalar, or null; decoding does not validate the shape or domain rules.
 
@@ -79,7 +87,7 @@ an array, scalar, or null; decoding does not validate the shape or domain rules.
 
 | Entry point | Behavior |
 | --- | --- |
-| `new Response(string $body = '', int $status = 200, array $headers = [])` | Constructs a final response with string-valued headers |
+| `new Response(string $body = '', int $status = 200, array $headers = [])` | Constructs a buffered response with string-valued headers |
 | `Response::text(string $body, int $status = 200): Response` | Sets `text/plain; charset=utf-8` |
 | `Response::html(string $body, int $status = 200): Response` | Sets `text/html; charset=utf-8` |
 | `Response::json(mixed $data, int $status = 200): Response` | Encodes JSON and sets `application/json; charset=utf-8` |
@@ -91,7 +99,56 @@ and a body for status 204, 205, or 304. Header names are stored in lowercase.
 JSON encoding failures throw. HTML is not escaped automatically; untrusted text
 needs escaping at the rendering boundary with `htmlspecialchars`.
 
-Bodies are buffered. Repeated `Set-Cookie` headers and streaming are not supported.
+Ordinary response bodies are buffered. Repeated `Set-Cookie` headers and
+arbitrary response streams are not supported.
+
+## Uploaded files
+
+`UploadedFile::fromPhp(array $upload, int $maxBytes): UploadedFile` validates one
+entry from `$_FILES`. Pass `$_FILES['file'] ?? []` for a single `file` input.
+Nested multiple-file arrays are rejected; adapt each entry separately if needed.
+
+The returned readonly value exposes `path`, `name`, and `size`. The path must
+be a native PHP upload. The name is a UTF-8 client basename without control
+characters; it remains untrusted display text. The size is read from disk and
+must match PHP's reported size and fit the caller's byte limit. Empty files are
+allowed, including with a zero limit. A negative limit throws
+`InvalidArgumentException`.
+
+| Input failure | HTTP status |
+| --- | --- |
+| Missing, partial, malformed, nested, or non-upload input | 400 |
+| PHP upload size error or actual file exceeds `maxBytes` | 413 |
+| PHP temporary-directory, write, extension, or file-stat failure | 500 |
+
+Stage does not retain, move, delete, inspect, or trust the MIME type of the
+payload. PHP removes an unmoved upload when the request ends. Authentication,
+allowed content, generated storage names, quotas, and retention belong to the
+application.
+
+## File downloads
+
+`new FileResponse(string $path, string $downloadName, array $headers = [])`
+returns a `Response` with status 200. Construction opens a regular file and
+records its byte length in the public `size` property. Its inherited `body`
+is empty. Missing files and directories throw `HttpError(404)`; open or stat
+failures throw `HttpError(500)` before any response is sent.
+
+`send()` reads at most 64 KiB at a time and emits the recorded `Content-Length`.
+`send(true)` sends the same headers and length without reading or sending the
+body. GET routes retain the ordinary HEAD fallback.
+
+Every file response sets `application/octet-stream`, an attachment disposition
+with an ASCII fallback and UTF-8 filename, and `X-Content-Type-Options: nosniff`.
+The download name cannot contain paths, control characters, or invalid UTF-8.
+The optional headers use normal response validation and cannot replace those
+three download headers or framing headers. Pass application cache, indexing,
+and CSP headers here instead of rebuilding the response from its empty `body`.
+
+Keep the file unchanged until sending finishes. Concurrent truncation or disk
+failure can interrupt delivery. Application or server output buffering and
+compression can defeat streaming; configure them for file routes. Range,
+resume, conditional requests, and arbitrary streams are not implemented.
 
 ## HTTP errors
 

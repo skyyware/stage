@@ -5,7 +5,7 @@ namespace Stage\Http;
 
 use InvalidArgumentException;
 
-final readonly class Response
+readonly class Response
 {
     /** @var array<string, string> */
     public array $headers;
@@ -52,10 +52,20 @@ final readonly class Response
             header($name . ': ' . $value, true);
         }
         if (!in_array($this->status, [204, 304], true)) {
-            header('Content-Length: ' . strlen($this->body));
+            header('Content-Length: ' . $this->bodyLength());
         }
         if (!$head) {
-            echo $this->body;
+            $this->sendBody();
         }
+    }
+
+    protected function bodyLength(): int
+    {
+        return strlen($this->body);
+    }
+
+    protected function sendBody(): void
+    {
+        echo $this->body;
     }
 }

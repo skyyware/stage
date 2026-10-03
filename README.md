@@ -81,6 +81,7 @@ Start with the guide that matches your next task:
 | Task | Guide |
 | --- | --- |
 | Add routes, accept JSON, and check responses | [Build your first HTTP application](docs/getting-started.md) |
+| Accept file uploads and stream downloads | [Transfer files](docs/files.md) |
 | Keep rules and permissions in reusable PHP objects | [Compose features](docs/features.md) |
 | Look up HTTP methods, errors, and limits | [HTTP reference](docs/http.md) |
 | Give a coding agent a bounded application task | [Work with agents](docs/agents.md) |
@@ -99,13 +100,16 @@ Each package has its own installation guide, version, and MIT license.
 
 ## Current scope
 
-The initial core provides literal and named-parameter HTTP routes, immutable messages, bounded
-request bodies, JSON responses, and an optional caller permission value.
+The initial core provides literal and named-parameter HTTP routes, bounded
+request bodies, JSON responses, validated PHP uploads, streamed file downloads,
+and an optional caller permission value.
 Authentication, persistence, queues, templates, and agent integrations belong
 to application code until an independently tested package earns a place here.
 
-The router buffers bodies. Worker lifecycle and performance under load have
-not been validated. See [the design](docs/design.md) for the current boundaries.
+Ordinary message bodies are buffered. File downloads use bounded chunks;
+PHP handles multipart uploads before dispatch. Worker lifecycle and performance
+under load have not been validated. See [the design](docs/design.md) for the
+current boundaries.
 
 ## License
 

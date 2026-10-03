@@ -41,12 +41,19 @@ Start with the smallest working application. Measure a real bottleneck before
 optimizing it. Define the failure case before adding retries or concurrency.
 Automate repeatable checks after the behavior is understood.
 
-The initial HTTP implementation buffers request and response bodies. Its default
-request body limit is 1 MiB. Literal paths and named path segments are supported.
-There is no streaming or catch-all wildcard, and one string per response header.
-It does not implement PSR-7 or
-PSR-15. Large uploads, cookie handling, queues, worker lifecycle, and distributed
-transactions need separate designs and tests before they are advertised.
+Ordinary HTTP messages have buffered bodies with a default raw request limit
+of 1 MiB. PHP handles multipart uploads before routing; `UploadedFile` validates
+one native upload and its byte limit. `FileResponse` opens a regular file before
+dispatch completes and streams it in bounded chunks. The application owns file
+access, storage, retention, and cache policy. Tests transfer a 64 MiB file through
+native PHP HTTP with a 16 MiB PHP memory limit; they do not establish production
+throughput or total process memory.
+
+Literal paths and named path segments are supported. There is no catch-all
+wildcard, arbitrary response stream, or byte-range handling, and each response
+header has one string value. Stage does not implement PSR-7 or PSR-15. Cookie
+handling, queues, worker lifecycle, and distributed transactions need separate
+designs and tests before they are advertised.
 
 The long-term goal is a common foundation for small services and large systems.
 The initial website proves package consumption and HTTP delivery. It does not
