@@ -82,6 +82,7 @@ Start with the guide that matches your next task:
 | --- | --- |
 | Add routes, accept JSON, and check responses | [Build your first HTTP application](docs/getting-started.md) |
 | Accept file uploads and stream downloads | [Transfer files](docs/files.md) |
+| Package reusable routes as an idea | [Share an idea](docs/ideas.md) |
 | Keep rules and permissions in reusable PHP objects | [Compose features](docs/features.md) |
 | Look up HTTP methods, errors, and limits | [HTTP reference](docs/http.md) |
 | Give a coding agent a bounded application task | [Work with agents](docs/agents.md) |

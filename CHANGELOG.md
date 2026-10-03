@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.4 — 2026-10-03
+
+Add the `Stage\Http\Idea` contract for explicitly composed HTTP extensions.
+An idea returns routes; `Application` accepts it beside individual routes and
+checks collisions across both. Existing route construction and HTTP behavior
+are unchanged. No automatic discovery, activation, or production dependency
+is added. The idea guide covers Composer packaging and ownership boundaries.
+
 ## 0.1.3 — 2026-10-03
 
 - Add `UploadedFile::fromPhp` for one native PHP upload, with checked metadata,

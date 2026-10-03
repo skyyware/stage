@@ -14,14 +14,16 @@ final readonly class Application
     /** @var array<int, array<string, array<int, array<string, Route>>>> */
     private array $patterns;
 
-    public function __construct(Route ...$routes)
+    public function __construct(Route|Idea ...$entries)
     {
         $index = [];
-        foreach ($routes as $route) {
-            if (isset($index[$route->key][$route->method])) {
-                throw new InvalidArgumentException('Duplicate route: ' . $route->method . ' ' . $route->path);
+        foreach ($entries as $entry) {
+            foreach ($entry instanceof Idea ? $entry->routes() : [$entry] as $route) {
+                if (isset($index[$route->key][$route->method])) {
+                    throw new InvalidArgumentException('Duplicate route: ' . $route->method . ' ' . $route->path);
+                }
+                $index[$route->key][$route->method] = $route;
             }
-            $index[$route->key][$route->method] = $route;
         }
         $literal = [];
         $patterns = [];

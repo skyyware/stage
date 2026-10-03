@@ -5,7 +5,7 @@ Composer application. This reference describes the `Stage\Http` classes.
 
 ## Routes
 
-`Application` accepts `Route` objects. Each route has an uppercase method, a
+`Application` accepts `Route` objects and [HTTP ideas](ideas.md). Each route has an uppercase method, a
 literal encoded path or a named path pattern, and a callable accepting `Request`
 and returning `Response`.
 
@@ -13,7 +13,7 @@ and returning `Response`.
 | --- | --- |
 | `new Route(string $method, string $path, callable $handler)` | Registers an uppercase method and encoded path or pattern |
 | `Route::get(string $path, callable $handler)` | Constructs a GET route |
-| `new Application(Route ...$routes)` | Builds the routing index and rejects duplicate method and path shapes |
+| `new Application(Route\|Idea ...$entries)` | Expands ideas, builds the routing index, and rejects duplicate method and path shapes |
 
 Duplicate methods for the same path shape fail at startup, including `/{id}`
 and `/{slug}`. OPTIONS is provided by the application; registering an OPTIONS
