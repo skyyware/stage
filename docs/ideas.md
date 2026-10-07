@@ -1,8 +1,9 @@
 # Share an idea
 
-An idea is a reusable piece of a Stage application. Distribute it as an ordinary
-Composer library with an explicit PHP contract. Install it, construct it, and
-pass it to the part of the application that needs it.
+An idea is a reusable part of a Stage application with a defined PHP interface.
+Start in your application. When another application needs it, move it into a
+Composer library. The application constructs the object and passes it to the
+code that uses it.
 
 An HTTP idea implements `Stage\Http\Idea`, available since 0.1.4. It returns a
 list of `Route` objects. `Application` accepts ideas alongside individual routes:
@@ -60,7 +61,7 @@ calls, and a changelog. Publish a versioned repository and register it with
 Packagist. Consumers install the library through Composer and commit their
 lockfile. The example vendor name is a placeholder, not an existing package.
 
-## Keep the contract small
+## Know what an HTTP idea can change
 
 Ideas are expanded once when `Application` is constructed. Literal priority,
 named parameters, HEAD, OPTIONS, and 405 handling are unchanged. Duplicate
@@ -76,6 +77,6 @@ or runtime marketplace. Installed Composer packages are trusted PHP code, not
 a sandbox. Review their code, dependencies, maintenance, and permissions before
 installation. Content and agent output cannot install or activate an idea.
 
-For machine readers, include supported PHP/Stage versions, constructor inputs,
+For people and agents, document supported PHP/Stage versions, constructor inputs,
 owned routes, required permissions, state location, validation commands,
 upgrade steps, and current limits in the README. Keep examples executable.

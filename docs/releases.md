@@ -46,6 +46,6 @@ complete synthetic workflow through the installed package. A connector test
 can use the local fake CLI; do not make a paid provider call merely to check
 distribution. Remove disposable credentials and runtime after the check.
 
-A release is complete only when documentation, native checks, GitHub Release,
+A release is complete only when documentation, local checks, GitHub Release,
 Packagist metadata, and the fresh consumer agree on the same version and commit.
 Report publication separately from an application's deployment or live acceptance.

@@ -1,7 +1,7 @@
 # Compose features
 
 Build a counter and a report in your application. The counter owns input and
-permission checks. The report receives a contract exposing only the read operation.
+permission checks. The report receives a PHP interface with only a read method.
 
 Start with [the Composer application](../README.md#create-an-application).
 Run all commands from your application directory.
@@ -106,7 +106,7 @@ final class Counter implements ReadCount
 The operations check permissions before reading or changing the count.
 A call from HTTP, a command, or an agent adapter follows the same rule.
 
-## Compose another feature through the contract
+## Call another feature through its interface
 
 Create `src/Features/Reports/Report.php`:
 
@@ -187,7 +187,7 @@ Both rejected calls leave the count unchanged.
 
 ## Apply the pattern to your application
 
-Supply callers from your trusted authentication adapter. The fixed callers
+Create callers in code that verifies credentials. The fixed callers
 above are local examples. A `Caller` value does not authenticate a person or
 agent. Never accept a permission list from an untrusted request. Permissions
 are exact strings; they do not support wildcards. Check resource and tenant
@@ -206,7 +206,7 @@ Static analysis does not prevent shared-database access or reflection.
 
 The example stores its count in memory for one command invocation. It does
 not provide persistence, transactions, concurrency, or tenant storage.
-Create request-specific mutable objects per request. An immutable router
+Create mutable request state for each request. An immutable router
 does not make a mutable object captured by a handler safe to share in a worker.
 
 Read [the design](design.md) for the core's responsibilities and limits.

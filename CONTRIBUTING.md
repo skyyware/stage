@@ -32,9 +32,9 @@ php -S 127.0.0.1:8080 -t examples examples/hello.php
 Open [http://127.0.0.1:8080](http://127.0.0.1:8080) and expect
 `{"hello":"world"}`. Press Ctrl+C to stop the server.
 
-Start a change with a concrete caller and a failing behavior. Prefer deleting
-unnecessary work to adding another abstraction. Keep state and authorization
-with their owning feature. Explain public behavior in the documentation and
+Start by showing who needs the change and what currently fails. Remove
+unnecessary work before adding another abstraction. Keep data and permission
+checks with the feature that owns them. Explain public behavior in the docs and
 keep the examples executable.
 
 The API is experimental. Record breaking changes in the same change as the
@@ -44,7 +44,7 @@ Do not include secrets, personal data, or private source material in changes.
 ## Propose a change
 
 Use [issues](https://github.com/skyyware/stage/issues) for reproducible bugs and
-bounded proposals. Include the PHP version, smallest example, expected result,
+proposals for one change. Include the PHP version, smallest example, expected result,
 and actual result. Discuss a new abstraction before implementing it.
 
 Fork the repository, create a branch, and make one coherent change. Update

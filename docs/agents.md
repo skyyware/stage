@@ -1,11 +1,11 @@
 # Work on a Stage application with an agent
 
 Give the agent the application repository and one concrete user outcome.
-Read its `AGENTS.md`, `composer.json`, and feature entry point together.
-Locate the operation that owns the rule before changing HTTP or presentation.
+Read its `AGENTS.md`, `composer.json`, and the code that handles the task.
+Find the operation that owns the rule before changing HTTP handlers or templates.
 
 1. Reproduce the requested behavior with a small input.
-2. Identify its authorization and state boundaries.
+2. Find where permissions are checked and where data is stored or changed.
 3. Change the owning operation and its callers together.
 4. Test successful, denied, and malformed calls.
 5. Run the application's check command and inspect the actual result.
@@ -14,7 +14,7 @@ Locate the operation that owns the rule before changing HTTP or presentation.
 The [first HTTP application](getting-started.md) provides a runnable entry point
 and response checks. [Compose features](features.md) builds operations with
 permissions in the application's own namespace. Use [the HTTP reference](http.md)
-to look up transport behavior. The framework's development tools and
+to look up request and response behavior. The framework's development tools and
 `composer check` script are not inherited by applications through Composer.
 Stage does not require a model vendor, subscription, or autonomous runtime.
 

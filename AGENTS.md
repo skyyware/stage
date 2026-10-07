@@ -1,8 +1,9 @@
 # Working on Stage
 
 Read README.md and docs/design.md. Keep the core independent of applications.
-Use explicit constructors, typed input, and feature contracts. Public docs
-describe behavior and executable examples without private research context.
+Pass dependencies through constructors, validate input into typed values, and
+use interfaces between features. Public docs describe behavior with runnable
+examples. Keep private research out of them.
 
 Run composer check after meaningful changes. Test denied and malformed calls,
 not only successful calls. Add no explanatory source comments or TODOs.
@@ -15,8 +16,8 @@ version: local checks, an immutable tag, a GitHub Release, Packagist availabilit
 and a fresh Composer consumer. Keep Actions and dependency automation disabled.
 
 For the public Stage packages listed in docs/releases.md, an authorized new-
-version delivery includes those publication steps without a separate routine
-approval. New visibility scopes, unrelated repositories, new access or
+version delivery includes those publication steps without another routine
+approval. Changes to visibility, unrelated repositories, new access or
 credentials, and automation need their own maintainer instruction. If a required
 check or existing access is missing, report that limit and finish independent work.
 

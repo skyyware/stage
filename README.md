@@ -2,8 +2,8 @@
 
 Stage is a PHP framework for people and coding agents.
 It provides HTTP routing, request and response values, and caller permission
-checks. Keep your application rules in typed PHP objects, then compose more
-features as the application grows.
+checks. Write your application rules in typed PHP objects and pass dependencies
+through their constructors.
 
 Requires PHP 8.4 or later within PHP 8. Stage is open source under MIT.
 Version 0.1 is an early release. The API can change between minor
@@ -62,12 +62,12 @@ configure a production server. PHP's built-in server is for local development.
 Continue with [routes and JSON input](docs/getting-started.md) to add an endpoint
 and check successful, malformed, and rejected requests.
 
-## Build with clear boundaries
+## Keep rules in your application
 
 - Pass dependencies through constructors. No global container is required.
-- Parse external input into types before calling an operation.
+- Validate external input and turn it into typed values before calling an operation.
 - Check permissions inside the operation, including calls outside HTTP.
-- Expose a feature contract when another feature needs it.
+- Define a PHP interface when another feature needs to call yours.
 - Test successful, denied, and malformed calls in your application.
 
 Stage requires no other production Composer packages. Choose your application's
@@ -105,7 +105,7 @@ The core provides literal and named-parameter HTTP routes, bounded request
 bodies, JSON responses, validated PHP uploads, streamed file downloads, inline
 media with single byte ranges, and an optional caller permission value.
 Authentication, persistence, queues, templates, and agent integrations belong
-to application code until an independently tested package earns a place here.
+to your application or a package you choose.
 
 Ordinary message bodies are buffered. File downloads use bounded chunks;
 PHP handles multipart uploads before dispatch. Worker lifecycle and performance

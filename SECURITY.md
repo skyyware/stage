@@ -1,8 +1,8 @@
 # Report a security problem
 
 Use [GitHub private vulnerability reporting](https://github.com/skyyware/stage/security/advisories/new).
-Include the affected version, minimal reproduction, impact, and the boundary
-that an attacker can cross. Use systems you own or are authorized to test.
+Include the affected version, smallest reproduction, impact, and which
+protection fails. Use systems you own or are authorized to test.
 
 Do not disclose private data or credentials. Avoid public exploit reports
 until maintainers have investigated the report and coordinated a correction.

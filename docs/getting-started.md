@@ -87,7 +87,7 @@ curl -i http://127.0.0.1:8080/hello \
 	-d '{"name":42}'
 ```
 
-Expect status 422 and `{"error":422}`. The handler rejects the value's shape.
+Expect status 422 and `{"error":422}`. The handler requires a string for `name`.
 An empty or whitespace-only name also returns 422.
 
 Call the POST endpoint with GET:
