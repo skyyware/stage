@@ -89,6 +89,35 @@ rebuild this response from `$response->body`; that property is empty because
 the file is not buffered. The [HTTP reference](http.md#file-downloads) lists
 validation, errors, and current limitations.
 
+## Serve inline media
+
+Requires `skyyware/stage` 0.1.5 or later. Use `FileResponse::inline` when a
+browser should play an allowed audio or video file and seek within it.
+In a GET handler that accepts a `Stage\Http\Request`:
+
+```php
+return FileResponse::inline($authorizedPath, $displayName, $validatedContentType, $request, [
+	'cache-control' => 'no-store',
+	'x-robots-tag' => 'noindex',
+]);
+```
+
+Resolve `$authorizedPath` only after checking access and any share expiry.
+Set `$validatedContentType` from your application's media allowlist after
+checking the file. Stage validates the `type/subtype` syntax; it does not
+inspect content or decide whether it is safe to display. Do not pass through
+an uploaded MIME type or enable inline HTML or SVG for untrusted files.
+
+A GET with one satisfiable byte range returns 206 and only those bytes.
+An unsatisfiable range returns an empty 416 response. Malformed and multiple
+ranges fall back to the full file with 200. `If-Range` also falls back to 200;
+Stage does not evaluate validators. HEAD ignores Range and sends the full
+length without a body. [The HTTP reference](http.md#inline-files-and-byte-ranges)
+defines the accepted ranges and remaining limits.
+
+Existing `new FileResponse(...)` calls remain attachment downloads. They keep
+their octet-stream content type and do not process Range.
+
 ## Set limits at each boundary
 
 Stage's raw request limit remains 1 MiB. It does not limit PHP-parsed multipart

@@ -107,6 +107,57 @@ final class FileTest extends TestCase
         }
     }
 
+    public function testInlineDeliveryOwnsItsMediaAndRangeHeaders(): void
+    {
+        $response = FileResponse::inline(__FILE__, 'film "ä".mp4', 'video/mp4', new Request('GET', '/media', headers: ['Range' => 'bytes=2-5']), ['Cache-Control' => 'no-store']);
+        self::assertSame(206, $response->status);
+        self::assertSame('', $response->body);
+        self::assertSame(filesize(__FILE__), $response->size);
+        self::assertSame('video/mp4', $response->headers['content-type']);
+        self::assertSame('nosniff', $response->headers['x-content-type-options']);
+        self::assertSame('bytes', $response->headers['accept-ranges']);
+        self::assertSame('bytes 2-5/' . filesize(__FILE__), $response->headers['content-range']);
+        self::assertSame('no-store', $response->headers['cache-control']);
+        self::assertStringStartsWith('inline;', $response->headers['content-disposition']);
+        self::assertStringContainsString("filename*=UTF-8''film%20%22%C3%A4%22.mp4", $response->headers['content-disposition']);
+        foreach (['', 'video', 'video/*', 'video/mp4; codecs=avc1', "video/mp4\r\nX-Header: injected"] as $type) {
+            try {
+                FileResponse::inline(__FILE__, 'film.mp4', $type, new Request('GET', '/media'));
+                self::fail('Invalid media type accepted.');
+            } catch (InvalidArgumentException) {
+                self::addToAssertionCount(1);
+            }
+        }
+        foreach (['Content-Type', 'Content-Disposition', 'X-Content-Type-Options', 'Content-Range', 'Accept-Ranges', 'Content-Length', 'Transfer-Encoding'] as $name) {
+            try {
+                FileResponse::inline(__FILE__, 'film.mp4', 'video/mp4', new Request('GET', '/media'), [$name => 'injected']);
+                self::fail('Owned file header replaced.');
+            } catch (InvalidArgumentException) {
+                self::addToAssertionCount(1);
+            }
+        }
+    }
+
+    public function testRangeFallbackDoesNotGuessAtMalformedOrConditionalRequests(): void
+    {
+        foreach (['bytes=', 'bytes=-', 'bytes=9-2', 'items=1-2', 'bytes=0-1,4-5', 'bytes=+1-2', "bytes=0-1\r\n", 'bytes=' . str_repeat('9', 50) . '-' . str_repeat('8', 50)] as $range) {
+            $response = FileResponse::inline(__FILE__, 'film.mp4', 'video/mp4', new Request('GET', '/media', headers: ['range' => $range]));
+            self::assertSame(200, $response->status, $range);
+            self::assertArrayNotHasKey('content-range', $response->headers);
+        }
+        foreach ([new Request('HEAD', '/media', headers: ['range' => 'bytes=0-1']),
+            new Request('POST', '/media', headers: ['range' => 'bytes=0-1']),
+            new Request('GET', '/media', headers: ['range' => 'bytes=0-1', 'If-Range' => '"version"']),
+            new Request('GET', '/media', headers: ['range' => 'bytes=0-1', 'Range' => 'bytes=3-4'])] as $request) {
+            self::assertSame(200, FileResponse::inline(__FILE__, 'film.mp4', 'video/mp4', $request)->status);
+        }
+        foreach (['bytes=-0', 'bytes=' . str_repeat('9', 50) . '-'] as $range) {
+            $response = FileResponse::inline(__FILE__, 'film.mp4', 'video/mp4', new Request('GET', '/media', headers: ['range' => $range]));
+            self::assertSame(416, $response->status);
+            self::assertSame('bytes */' . filesize(__FILE__), $response->headers['content-range']);
+        }
+    }
+
     private function expectHeaderRefusal(array $headers): void
     {
         try {

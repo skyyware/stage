@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.1.5 — 2026-10-07
+
+- Add `FileResponse::inline` for an application-approved media type and request.
+  GET supports a single bounded, open-ended, or suffix byte range. Satisfiable
+  ranges return 206; unsatisfiable ranges return an empty 416 with the file length.
+- Define full-file 200 fallback for malformed, reversed, multiple, unknown-unit,
+  and `If-Range` requests. HEAD ignores Range and sends no body.
+- Keep attachment downloads, filename and header checks, and 64 KiB streaming
+  unchanged. The application still owns authorization, MIME policy, and caching.
+- Verify an 80 MiB inline transfer under a 16 MiB PHP memory limit, exact range
+  bodies, empty files, large numeric offsets, and protected headers.
+
+No new production dependencies or required consumer migration. Conditional
+validators, multipart ranges, and production throughput are not covered.
+
 ## 0.1.4 — 2026-10-03
 
 Add the `Stage\Http\Idea` contract for explicitly composed HTTP extensions.

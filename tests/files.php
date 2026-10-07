@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use Stage\Http\Application;
 use Stage\Http\FileResponse;
+use Stage\Http\Request;
 use Stage\Http\Response;
 use Stage\Http\Route;
 use Stage\Http\UploadedFile;
@@ -26,6 +27,7 @@ $upload = static function (int $limit): Response {
         'cache-control' => 'no-store', 'x-robots-tag' => 'noindex', 'content-security-policy' => "default-src 'none'",
     ])),
     Route::get('/missing', fn () => new FileResponse($path . '.missing', 'missing.bin')),
+    Route::get('/inline', fn (Request $request) => FileResponse::inline($path, 'film.mp4', 'video/mp4', $request, ['cache-control' => 'no-store'])),
     new Route('POST', '/upload', fn () => $upload(250_000_000)),
     new Route('POST', '/small-upload', fn () => $upload(8)),
 ))->run(32);

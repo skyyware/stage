@@ -138,7 +138,7 @@ failures throw `HttpError(500)` before any response is sent.
 `send(true)` sends the same headers and length without reading or sending the
 body. GET routes retain the ordinary HEAD fallback.
 
-Every file response sets `application/octet-stream`, an attachment disposition
+The constructor's default sets `application/octet-stream`, an attachment disposition
 with an ASCII fallback and UTF-8 filename, and `X-Content-Type-Options: nosniff`.
 The download name cannot contain paths, control characters, or invalid UTF-8.
 The optional headers use normal response validation and cannot replace those
@@ -147,8 +147,37 @@ and CSP headers here instead of rebuilding the response from its empty `body`.
 
 Keep the file unchanged until sending finishes. Concurrent truncation or disk
 failure can interrupt delivery. Application or server output buffering and
-compression can defeat streaming; configure them for file routes. Range,
-resume, conditional requests, and arbitrary streams are not implemented.
+compression can defeat streaming; configure them for file routes. Attachment
+downloads ignore Range. Conditional requests and arbitrary streams are not implemented.
+
+### Inline files and byte ranges
+
+Since 0.1.5, `FileResponse::inline(string $path, string $downloadName, string $contentType, Request $request, array $headers = [])`
+serves a file inline with `Accept-Ranges: bytes` and `nosniff`. The content type
+must be a bare `type/subtype`, such as `video/mp4`; parameters, wildcards, and
+header injection are rejected. This checks syntax only. The application must
+authorize access, check the file, and choose an allowed media type.
+
+| Request | Result |
+| --- | --- |
+| GET without Range | 200 with the full file |
+| GET with one satisfiable byte range | 206 with `Content-Range` and the selected bytes |
+| GET with an unsatisfiable byte range | 416, `Content-Range: bytes */SIZE`, and an empty body |
+| Malformed, reversed, multiple, or unknown-unit ranges | 200 with the full file |
+| Any request containing `If-Range` | 200 with the full file; validators are not evaluated |
+| HEAD | 200 with the full length and no body; Range is ignored |
+
+Ranges accept an inclusive pair (`bytes=2-5`), an open end (`bytes=7-`), or a
+suffix (`bytes=-3`). An end beyond the file is clamped to its last byte. A
+positive suffix longer than the file selects the whole file with 206. A zero
+suffix, a start at or beyond the file's length, or any valid range on an empty
+file is unsatisfiable. Other methods ignore Range.
+
+The public `size` remains the complete file length. `Content-Length` is the
+selected length, and `body` stays empty. Custom headers cannot replace
+`Accept-Ranges`, `Content-Range`, the content type, disposition, `nosniff`, or
+framing headers. The same filename checks, 64 KiB reads, and file errors apply
+as for attachments. See [the inline media example](files.md#serve-inline-media).
 
 ## HTTP errors
 

@@ -101,9 +101,9 @@ Each package has its own installation guide, version, and MIT license.
 
 ## Current scope
 
-The initial core provides literal and named-parameter HTTP routes, bounded
-request bodies, JSON responses, validated PHP uploads, streamed file downloads,
-and an optional caller permission value.
+The core provides literal and named-parameter HTTP routes, bounded request
+bodies, JSON responses, validated PHP uploads, streamed file downloads, inline
+media with single byte ranges, and an optional caller permission value.
 Authentication, persistence, queues, templates, and agent integrations belong
 to application code until an independently tested package earns a place here.
 

@@ -19,9 +19,9 @@ check includes an intentionally forbidden import to prove the rule can fail.
 These tools and scripts are not installed into applications that require Stage.
 
 File-transfer tests require the `curl` command and permission to start a PHP
-development server on a temporary loopback port. They transfer a 64 MiB fixture
-with a 16 MiB PHP memory limit, check HEAD and denied uploads, and remove their
-temporary files from `.runtime/`. Allow about 200 MiB of local scratch space.
+development server on a temporary loopback port. They transfer files up to 80 MiB
+with a 16 MiB PHP memory limit, check ranges, HEAD, and denied uploads, and remove
+their temporary files from `.runtime/`. Allow about 300 MiB of local scratch space.
 
 To run the framework's HTTP example:
 
