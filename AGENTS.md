@@ -5,6 +5,13 @@ Pass dependencies through constructors, validate input into typed values, and
 use interfaces between features. Public docs describe behavior with runnable
 examples. Keep private research out of them.
 
+When behavior changes, update its canonical README or docs in the same change.
+For stage.dev delivery, coordinate the released package, website lockfile, and
+Starchat source manifest. The website reads these original Markdown files;
+do not maintain a second copy for chat. Verify examples, reviewed source hashes,
+resource pages, and retrieval before delivery. Private maintainer records are
+not public chat sources. This upkeep adds no scheduler or repository automation.
+
 Run composer check after meaningful changes. Test denied and malformed calls,
 not only successful calls. Add no explanatory source comments or TODOs.
 PHPDoc consumed by static analysis and required legal notices are allowed.
