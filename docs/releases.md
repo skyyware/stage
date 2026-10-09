@@ -7,7 +7,7 @@ version and checks. Application repositories are released separately.
 ## Prepare the version
 
 1. Inspect the working tree, upstream, and latest remote tags. Preserve unrelated work.
-2. Check the README, examples, API references, contribution guide, and agent instructions against the proposed code.
+2. Review the README, executable examples, API references, contribution guide, agent instructions, and affected chat knowledge under the [documentation review](#review-documentation-and-starchat-knowledge).
 3. Check licenses and tracked files for credentials, private data, runtime, and source material without redistribution rights.
 4. Choose a semantic version and add its behavior, compatibility, and upgrade notes to the changelog. Before 1.0, use a minor version for incompatible API changes and a patch for compatible fixes.
 5. Run `composer install` and `composer check` in the package checkout. Run the package-specific checks listed in its contribution or release guide.
@@ -16,6 +16,38 @@ version and checks. Application repositories are released separately.
 Keep GitHub Actions, CI/CD, and automatic dependency jobs disabled. Local checks
 are required even when no pipeline runs. Do not add or change Packagist hooks as
 a side effect of a release; inspect existing hooks separately.
+
+## Review documentation and Starchat knowledge
+
+When behavior, APIs, requirements, or usage guidance changes, maintainers
+review the package docs, executable examples, and affected Starchat articles
+in the same delivery. Correct the parts affected by the change.
+
+[stage.dev](https://stage.dev/) is the technical knowledge home for Stage and
+all official packages, including Starchat. Its owner maintains prepared
+articles in `knowledge/<category>/*.md`. The installation's
+`knowledge/sources.json` maps source files, hashes, and package versions to
+those articles. Package documentation remains the technical source used to
+prepare and review the articles.
+
+Each Starchat installation owns its curated Markdown database. Live chat
+reads those articles only. Do not connect it to package files or external
+Markdown sources, put installation databases inside packages, or replace
+prepared articles with raw README copies. The website builds a disposable
+index from its articles.
+
+1. Review changed behavior, requirements, examples, and limits against the package implementation.
+2. Identify affected articles through the source map. Coordinate their revision and updated source references with the stage.dev owner.
+3. Execute affected examples against the intended package version. The installation owner rebuilds its index and checks retrieval and complete answers for the changed guidance.
+4. Record package, documentation, and knowledge revisions with their checks. If installation access or verification is unavailable, leave that part pending and report the limit.
+
+Contributors describe the affected guidance; maintainers coordinate changes
+in the owning installation. Website access is not required to contribute to
+a package. These checks add no access or deployment authority.
+
+Relevant source changes trigger this work. Do not refresh review dates merely
+because time passed or add a periodic knowledge refresh, watcher, or job.
+Documentation-only instruction changes need no package tag or version bump.
 
 ## Publish the tag and release
 

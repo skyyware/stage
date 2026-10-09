@@ -37,6 +37,13 @@ unnecessary work before adding another abstraction. Keep data and permission
 checks with the feature that owns them. Explain public behavior in the docs and
 keep the examples executable.
 
+For behavior, API, requirements, or usage changes, review the package docs and
+executable examples together. Identify affected technical guidance on
+[stage.dev](https://stage.dev/). Maintainers coordinate its curated knowledge
+update in the same delivery under the
+[release guide](docs/releases.md#review-documentation-and-starchat-knowledge).
+You do not need access to the website repository to contribute.
+
 The API is experimental. Record breaking changes in the same change as the
 implementation. Add no compatibility alias without a real caller needing it.
 Do not include secrets, personal data, or private source material in changes.

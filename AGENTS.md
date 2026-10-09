@@ -5,12 +5,13 @@ Pass dependencies through constructors, validate input into typed values, and
 use interfaces between features. Public docs describe behavior with runnable
 examples. Keep private research out of them.
 
-When behavior changes, update its canonical README or docs in the same change.
-For stage.dev delivery, coordinate the released package, website lockfile, and
-Starchat source manifest. The website reads these original Markdown files;
-do not maintain a second copy for chat. Verify examples, reviewed source hashes,
-resource pages, and retrieval before delivery. Private maintainer records are
-not public chat sources. This upkeep adds no scheduler or repository automation.
+When behavior, APIs, requirements, or usage guidance changes, review package
+docs and executable examples in the same change. Follow the
+[documentation and Starchat knowledge review](docs/releases.md#review-documentation-and-starchat-knowledge)
+for the same delivery. The stage.dev owner maintains its own curated Markdown
+articles and source mappings. Each Starchat installation owns its knowledge.
+Keep private maintainer records out of public chat sources. This upkeep adds
+no periodic knowledge refresh or repository automation.
 
 Run composer check after meaningful changes. Test denied and malformed calls,
 not only successful calls. Add no explanatory source comments or TODOs.
