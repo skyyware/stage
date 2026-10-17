@@ -12,7 +12,7 @@ Create a new application:
 ```sh
 mkdir stage-files
 cd stage-files
-composer require skyyware/stage:^0.1.3
+composer require skyyware/stage:^0.2
 mkdir public
 ```
 
@@ -114,6 +114,10 @@ ranges fall back to the full file with 200. `If-Range` also falls back to 200;
 Stage does not evaluate validators. HEAD ignores Range and sends the full
 length without a body. [The HTTP reference](http.md#inline-files-and-byte-ranges)
 defines the accepted ranges and remaining limits.
+
+In Stage 0.2, requests with invalid header syntax or duplicate names fail during
+construction. They do not reach the full-file fallback. A valid `Range` header
+containing multiple ranges still falls back to 200.
 
 Existing `new FileResponse(...)` calls remain attachment downloads. They keep
 their octet-stream content type and do not process Range.

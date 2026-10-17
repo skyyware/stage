@@ -16,6 +16,12 @@ accepts typed input and checks the caller before protected reads or writes.
 Authentication adapters establish that caller from trusted credentials.
 Never accept permissions directly from request data or model output.
 
+HTTP messages enforce their header invariant during construction. Every
+`Request` and `Response` exposes lowercase names and rejects ambiguous or
+malformed maps. Adapters cannot create a differently shaped request for an
+agent or test. Authentication and range selection use that invariant without
+repeating normalization. Application operations still own authorization.
+
 Features keep their implementation together. A feature exposes an interface
 under `Contract` when another feature needs it. The architecture check permits
 that dependency and rejects access to the implementation.

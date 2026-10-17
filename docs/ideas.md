@@ -51,7 +51,7 @@ Move the class into your own namespace and `src/` directory. A library's
 	"description": "A greeting route for Stage applications.",
 	"type": "library",
 	"license": "MIT",
-	"require": {"php": "^8.4", "skyyware/stage": "^0.1.4"},
+	"require": {"php": "^8.4", "skyyware/stage": "^0.2"},
 	"autoload": {"psr-4": {"YourVendor\\Greeting\\": "src/"}}
 }
 ```

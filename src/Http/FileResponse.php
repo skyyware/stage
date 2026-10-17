@@ -76,19 +76,11 @@ final readonly class FileResponse extends Response
     private static function selection(?Request $request, int $size): array
     {
         $full = [200, 0, $size];
-        if ($request === null || $request->method !== 'GET') {
+        if ($request === null || $request->method !== 'GET' || isset($request->headers['if-range'])) {
             return $full;
         }
-        $ranges = [];
-        foreach ($request->headers as $name => $value) {
-            if (strtolower($name) === 'if-range') {
-                return $full;
-            }
-            if (strtolower($name) === 'range') {
-                $ranges[] = $value;
-            }
-        }
-        if (count($ranges) !== 1 || !preg_match('/^bytes=([0-9]*)-([0-9]*)$/iD', trim($ranges[0], " \t"), $match)
+        $range = $request->headers['range'] ?? null;
+        if ($range === null || !preg_match('/^bytes=([0-9]*)-([0-9]*)$/iD', trim($range, " \t"), $match)
             || ($match[1] === '' && $match[2] === '')) {
             return $full;
         }

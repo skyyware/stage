@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.2.0 — 2026-10-17
+
+Every `Request` now owns a validated, lowercase header map. Direct calls,
+test clients, and native HTTP ingestion expose the same names to consumers.
+Header values remain unchanged. Requests and responses share the internal
+syntax and duplicate-name checks; response framing restrictions stay separate.
+File responses read the canonical request headers directly.
+
+Upgrade from 0.1 by changing the Composer constraint to `^0.2`. Read request
+headers with lowercase keys. Invalid names, control characters in values except
+horizontal tabs, and duplicate names regardless of case now throw
+`InvalidArgumentException` during direct construction. Native malformed input
+becomes HTTP 400. Invalid `Range` header syntax no longer reaches the file
+fallback; a valid header containing multiple ranges still returns the full file.
+
+The constructor signature, readonly array property, routing, body limits,
+permission checks, and valid range behavior are unchanged. There are no new
+production dependencies. PHP and the server still own wire-header parsing.
+
 ## 0.1.5 — 2026-10-07
 
 - Add `FileResponse::inline` for an application-approved media type and request.

@@ -17,14 +17,14 @@ Install [PHP](https://www.php.net/downloads.php) 8.4 or later within PHP 8 and
 ```sh
 mkdir stage-app
 cd stage-app
-composer require skyyware/stage:^0.1
+composer require skyyware/stage:^0.2
 mkdir public
 ```
 
 For an existing Composer project, install the same package:
 
 ```sh
-composer require skyyware/stage:^0.1
+composer require skyyware/stage:^0.2
 ```
 
 Composer installs the tagged package from [Packagist](https://packagist.org/packages/skyyware/stage).

@@ -5,9 +5,13 @@ namespace Stage\Http;
 
 use InvalidArgumentException;
 use JsonException;
+use Stage\Http\Internal\Headers;
 
 final readonly class Request
 {
+    /** @var array<string, string> */
+    public array $headers;
+
     /**
      * @param array<string, string> $headers
      * @param array<string, string> $parameters
@@ -16,7 +20,7 @@ final readonly class Request
         public string $method,
         public string $path,
         public string $body = '',
-        public array $headers = [],
+        array $headers = [],
         public string $query = '',
         public array $parameters = [],
     ) {
@@ -26,6 +30,7 @@ final readonly class Request
         if (!str_starts_with($path, '/') || preg_match('/[\x00-\x20\x7f?#]|%(?![0-9a-f]{2})/i', $path)) {
             throw new InvalidArgumentException('The request path must be an encoded absolute path.');
         }
+        $this->headers = Headers::normalize($headers);
     }
 
     /** @param array<string, string> $parameters */

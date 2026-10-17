@@ -62,6 +62,13 @@ encoded absolute path without spaces, control characters, a query, or a fragment
 Paths are not normalized or decoded. Invalid constructor input throws
 `InvalidArgumentException`.
 
+Since 0.2, every request stores header names in lowercase, including requests
+constructed by adapters or tests. Header values retain their bytes. Empty or
+invalid names, control characters in values except horizontal tabs, and duplicate
+names regardless of case throw `InvalidArgumentException` before routing.
+Consumers read `$request->headers['authorization']` without normalizing again.
+Header syntax does not authenticate a caller or grant an operation permission.
+
 | Entry point | Behavior |
 | --- | --- |
 | `new Request(string $method, string $path, string $body = '', array $headers = [], string $query = '', array $parameters = [])` | Constructs a request for an adapter or an in-memory call |
@@ -72,8 +79,9 @@ Paths are not normalized or decoded. Invalid constructor input throws
 Dispatch replaces any pre-existing parameter map with the matched route's values.
 `fromGlobals` reads at most the body limit plus one byte. Oversized input throws
 `HttpError(413)`; a malformed request or unreadable body throws `HttpError(400)`.
-Headers read from PHP have lowercase names. The raw query is kept separately
-from the path. Proxy headers never set identity or trust.
+PHP and the web server parse repeated wire headers before Stage sees them.
+Stage validates the resulting map, not the original header lines. The raw query
+is kept separately from the path. Proxy headers never set identity or trust.
 
 The raw body limit does not limit PHP-parsed POST multipart uploads. With PHP's
 normal `enable_post_data_reading` setting, uploaded files and form fields are

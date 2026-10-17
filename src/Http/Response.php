@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Stage\Http;
 
 use InvalidArgumentException;
+use Stage\Http\Internal\Headers;
 
 readonly class Response
 {
@@ -16,16 +17,11 @@ readonly class Response
         if ($status < 200 || $status > 599 || (in_array($status, [204, 205, 304], true) && $body !== '')) {
             throw new InvalidArgumentException('Invalid final response status or body.');
         }
-        $normalized = [];
-        foreach ($headers as $name => $value) {
-            $name = strtolower($name);
-            if (!preg_match('/^[!#$%&\'*+.^_`|~0-9a-z-]+$/D', $name) || preg_match('/[\x00-\x08\x0a-\x1f\x7f]/', $value)) {
-                throw new InvalidArgumentException('Invalid HTTP header.');
+        $normalized = Headers::normalize($headers);
+        foreach ($normalized as $name => $value) {
+            if (in_array($name, ['content-length', 'transfer-encoding', 'connection'], true)) {
+                throw new InvalidArgumentException('Server-owned HTTP header.');
             }
-            if (array_key_exists($name, $normalized) || in_array($name, ['content-length', 'transfer-encoding', 'connection'], true)) {
-                throw new InvalidArgumentException('Duplicate or server-owned HTTP header.');
-            }
-            $normalized[$name] = $value;
         }
         $this->headers = $normalized;
     }

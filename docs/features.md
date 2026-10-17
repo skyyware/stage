@@ -14,7 +14,7 @@ Keep any other dependencies and settings your application already has:
 ```json
 {
 	"require": {
-		"skyyware/stage": "^0.1"
+		"skyyware/stage": "^0.2"
 	},
 	"autoload": {
 		"psr-4": {
