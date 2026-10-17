@@ -6,7 +6,7 @@ checks. Write your application rules in typed PHP objects and pass dependencies
 through their constructors.
 
 Requires PHP 8.4 or later within PHP 8. Stage is open source under MIT.
-Version 0.1 is an early release. The API can change between minor
+Version 0.2 is an early release. The API can change between minor
 versions before 1.0. Read [the changelog](CHANGELOG.md) before updating.
 
 ## Create an application
